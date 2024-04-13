@@ -9,7 +9,6 @@ use App\Http\Requests\PrizeRequest;
 use Illuminate\Http\Request;
 
 
-
 class PrizesController extends Controller
 {
     /**
@@ -19,7 +18,7 @@ class PrizesController extends Controller
      */
     public function index()
     {
-        $prizes = Prize::all(); // Fetch your dynamic data here
+        $prizes = Prize::all();
         return view('prizes.index', compact('prizes'));
     }
 
@@ -44,16 +43,13 @@ class PrizesController extends Controller
         $current_probability = floatval(Prize::sum('probability'));
         $remaining_percentage = 100 - $current_probability;
 
-         // Define validation rules
         $validationRules = [
             'title' => 'required|string|max:255',
             'probability' => 'required|numeric|min:0|max:' . $remaining_percentage,
         ];
 
-        // Create validator instance
         $validator = Validator::make($request->all(), $validationRules);
 
-        // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
@@ -91,21 +87,16 @@ class PrizesController extends Controller
     {
         $prize = Prize::where('id',$id)->first();
 
-        // echo "<pre>";
-        // print_r(floatval($prize->probability));die;
         $current_probability = floatval(Prize::sum('probability'));
         $remaining_percentage = 100 - $current_probability;
 
-         // Define validation rules
         $validationRules = [
             'title' => 'required|string|max:255',
             'probability' => 'required|numeric|max:' . $prize->probability,
         ];
 
-        // Create validator instance
         $validator = Validator::make($request->all(), $validationRules);
 
-        // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
@@ -135,11 +126,6 @@ class PrizesController extends Controller
 
     public function simulate(Request $request)
     {
-        
-        // for ($i = 0; $i < $request->number_of_prizes ?? 10; $i++) {
-        //     Prize::nextPrize();
-        // }
-
         $numberOfPrizes = $request->input('number_of_prizes', 10);
 
         $results = [];
@@ -151,14 +137,12 @@ class PrizesController extends Controller
             }
         }
 
-        // Calculate probability distribution
         $totalPrizes = array_sum($results);
         $probabilityDistribution = [];
         foreach ($results as $prizeName => $count) {
             $probabilityDistribution[$prizeName] = $count / $totalPrizes;
         }
 
-        // Store results in the database
         foreach ($results as $prizeName => $count) {
             $prize = Prize::where('title', $prizeName)->first();
             if ($prize) {
@@ -174,8 +158,7 @@ class PrizesController extends Controller
     public function reset()
     {
         // TODO : Write logic here
-         // Reset all prizes awarded counts to 0
-    Prize::query()->update(['awarded' => 0]);
+        Prize::query()->update(['awarded' => 0]);
         return to_route('prizes.index');
     }
 }

@@ -93,7 +93,6 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
     <script>
@@ -105,11 +104,10 @@
     var backgroundColor = [];
 
     chartData.forEach(function(item) {
-        // labels.push(item.title);
         var formattedLabel = item.title + ' (' + item.probability + '%)';
-    labels.push(formattedLabel);
-        data.push(item.probability);
-    });
+        labels.push(formattedLabel);
+            data.push(item.probability);
+        });
 
     var myChart = new Chart(ctx, {
         type: 'doughnut',
@@ -131,8 +129,6 @@
     },
     plugins: {
       
-      /** Imported from a question linked above. 
-          Apparently Works for ChartJS V2 **/
       datalabels: {
         formatter: (value, dnct1) => {
           let sum = 0;
@@ -154,7 +150,6 @@
     });
 </script>
 <script>
-    // JavaScript code to render the doughnut chart
     var ctx = document.getElementById('awardedChart').getContext('2d');
     var chartData = {!! json_encode($prizes) !!};
 
@@ -187,9 +182,6 @@
     }
     },
     plugins: {
-    
-    /** Imported from a question linked above. 
-         Apparently Works for ChartJS V2 **/
     datalabels: {
         formatter: (value, dnct1) => {
         let sum = 0;
